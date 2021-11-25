@@ -1,7 +1,7 @@
 # Личный проект «Readme»
 
 * Студент: [Alexey Ivanov](https://up.htmlacademy.ru/php/12/user/185337).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Палян](https://htmlacademy.ru/profile/id1231107).
 
 ---
 
