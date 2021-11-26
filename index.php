@@ -1,6 +1,5 @@
 <?php
 $is_auth = rand(0, 1);
-
 $user_name = 'Алекс';
 $data_posts = [
     [
@@ -39,7 +38,6 @@ $data_posts = [
         'avatar_src' => 'userpic.jpg',
     ],
 ];
-
 ?>
 <!DOCTYPE html>
 <html lang="ru">
