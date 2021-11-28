@@ -47,14 +47,10 @@ function cut_text($input_string, $characters_count = 300)
     } else {
         $input_string_array = explode(' ', $input_string);
         $result_array = [];
-        $result_characters_count = 0;
-        for ($i = 0; ; $i += 1) {
-            $result_characters_count += mb_strlen($input_string_array[$i]) + 1;
-            if ($result_characters_count <= $characters_count) {
-                $result_array[] = $input_string_array[$i];
-            } else {
-                break;
-            }
+        $result_characters_count = mb_strlen($input_string_array[0]) + 1;
+        for ($i = 0; $result_characters_count <= $characters_count; $i += 1) {
+            $result_array[] = $input_string_array[$i];
+            $result_characters_count += mb_strlen($input_string_array[$i + 1]) + 1;
         }
         $output_string = implode(' ', $result_array);
         $output_string = "<p>$output_string...</p>";
@@ -264,20 +260,20 @@ function cut_text($input_string, $characters_count = 300)
         </div>
         <div class="popular__posts">
             <?php foreach ($data_posts as $key => $data_post):
-                $heading = $data_post['heading'];
-                $type = $data_post['type'];
-                $content = $data_post['content'];
-                $user_name = $data_post['user_name'];
-                $avatar_src = $data_post['avatar_src'];
+                $heading = $data_post['heading'] ?? null;
+                $type = $data_post['type'] ?? null;
+                $content = $data_post['content'] ?? null;
+                $user_name = $data_post['user_name'] ?? null;
+                $avatar_src = $data_post['avatar_src'] ?? null;
             ?>
-            <article class="popular__post post <?= $type ?? ''; ?>">
+            <article class="popular__post post <?= $type ?>">
                 <header class="post__header">
                     <?php if (isset($heading)): ?>
                     <h2><?= $heading ?></h2>
                     <?php endif; ?>
                 </header>
                 <div class="post__main">
-                    <?php if (isset($type) && ($type === 'post-quote')): ?>
+                    <?php if ($type === 'post-quote'): ?>
                     <blockquote>
                         <?php if (isset($content)): ?>
                         <p><?= $content ?></p>
@@ -286,9 +282,9 @@ function cut_text($input_string, $characters_count = 300)
                     </blockquote>
                     <?php endif; ?>
 
-                    <?php if (isset($type) && ($type === 'post-link')): ?>
+                    <?php if ($type === 'post-link'): ?>
                     <div class="post-link__wrapper">
-                        <a class="post-link__external" href="http://<?= $content ?? ''; ?>" title="Перейти по ссылке">
+                        <a class="post-link__external" href="<?= $content; ?>" title="Перейти по ссылке">
                             <div class="post-link__info-wrapper">
                                 <div class="post-link__icon-wrapper">
                                     <img src="https://www.google.com/s2/favicons?domain=vitadental.ru" alt="Иконка">
@@ -306,16 +302,16 @@ function cut_text($input_string, $characters_count = 300)
                     </div>
                     <?php endif; ?>
 
-                    <?php if (isset($type) && ($type === 'post-photo')): ?>
+                    <?php if ($type === 'post-photo'): ?>
                     <div class="post-photo__image-wrapper">
-                        <img src="img/<?= $content ?? ''; ?>" alt="Фото от пользователя" width="360" height="240">
+                        <img src="img/<?= $content; ?>" alt="Фото от пользователя" width="360" height="240">
                     </div>
                     <?php endif; ?>
 
-                    <?php if (isset($type) && ($type === 'post-video')): ?>
+                    <?php if ($type === 'post-video'): ?>
                     <div class="post-video__block">
                         <div class="post-video__preview">
-                            <?=embed_youtube_cover(/* вставьте ссылку на видео */); ?>
+                            <?= embed_youtube_cover(/* вставьте ссылку на видео */); ?>
                             <img src="img/coast-medium.jpg" alt="Превью к видео" width="360" height="188">
                         </div>
                         <a href="post-details.html" class="post-video__play-big button">
@@ -327,9 +323,9 @@ function cut_text($input_string, $characters_count = 300)
                     </div>
                     <?php endif; ?>
 
-                    <?php if (isset($type) && ($type === 'post-text')): ?>
+                    <?php if ($type === 'post-text'): ?>
                         <?php if (isset($content)): ?>
-                        <?= cut_text($content) ?>
+                        <?= cut_text($content); ?>
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
@@ -337,7 +333,7 @@ function cut_text($input_string, $characters_count = 300)
                     <div class="post__author">
                         <a class="post__author-link" href="#" title="Автор">
                             <div class="post__avatar-wrapper">
-                                <img class="post__author-avatar" src="img/<?= $avatar_src ?? ''; ?>" alt="Аватар пользователя">
+                                <img class="post__author-avatar" src="img/<?= $avatar_src; ?>" alt="Аватар пользователя">
                             </div>
                             <div class="post__info">
                                 <?php if (isset($user_name)): ?>
