@@ -39,7 +39,8 @@ $data_posts = [
     ],
 ];
 
-function cut_text($input_string, $characters_count = 300) {
+function cut_text($input_string, $characters_count = 300)
+{
     if (strlen($input_string) < $characters_count) {
         $output_string = "<p>$input_string</p>";
         return $output_string;
@@ -47,15 +48,16 @@ function cut_text($input_string, $characters_count = 300) {
         $input_string_array = explode(' ', $input_string);
         $result_array = [];
         $result_characters_count = 0;
-        for ($i = 0, $word_length = strlen($input_string_array[$i]) + 1;
-            ($result_characters_count + $word_length) <= $characters_count;
-            $i += 1
-            ) {
-            $result_characters_count += $word_length;
-            $result_array[] = $input_string_array[$i];
+        for ($i = 0; ; $i += 1) {
+            $result_characters_count += mb_strlen($input_string_array[$i]) + 1;
+            if ($result_characters_count <= $characters_count) {
+                $result_array[] = $input_string_array[$i];
+            } else {
+                break;
+            }
         }
-        $output_string = implode(' ', $result_array) . '...';
-        $output_string = "<p>$output_string</p>";
+        $output_string = implode(' ', $result_array);
+        $output_string = "<p>$output_string...</p>";
         $output_string .= '<a class="post-text__more-link" href="#">Читать далее</a>';
         return $output_string;
     }
@@ -286,7 +288,7 @@ function cut_text($input_string, $characters_count = 300) {
 
                     <?php if (isset($type) && ($type === 'post-link')): ?>
                     <div class="post-link__wrapper">
-                        <a class="post-link__external" href="<?= $content ?? ''; ?>" title="Перейти по ссылке">
+                        <a class="post-link__external" href="http://<?= $content ?? ''; ?>" title="Перейти по ссылке">
                             <div class="post-link__info-wrapper">
                                 <div class="post-link__icon-wrapper">
                                     <img src="https://www.google.com/s2/favicons?domain=vitadental.ru" alt="Иконка">
