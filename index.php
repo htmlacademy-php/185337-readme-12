@@ -41,8 +41,8 @@ $data_posts = [
 
 function cut_text($input_string, $characters_count = 300) {
     if (strlen($input_string) < $characters_count) {
-        $input_string = "<p>$input_string</p>";
-        return $input_string;
+        $output_string = "<p>$input_string</p>";
+        return $output_string;
     } else {
         $input_string_array = explode(' ', $input_string);
         $result_array = [];
