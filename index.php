@@ -12,7 +12,7 @@ $data_posts = [
     [
         'heading' => 'Игра престолов',
         'type' => 'post-text',
-        'content' => 'Не могу дождаться начала финального сезона своего любимого сериала!',
+        'content' => 'Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала!',
         'user_name' => 'Владик',
         'avatar_src' => 'userpic.jpg',
     ],
@@ -38,6 +38,27 @@ $data_posts = [
         'avatar_src' => 'userpic.jpg',
     ],
 ];
+
+function cut_text($input_string, $characters_count = 300)
+{
+    if (strlen($input_string) < $characters_count) {
+        $output_string = "<p>$input_string</p>";
+        return $output_string;
+    } else {
+        $input_string_array = explode(' ', $input_string);
+        $result_array = [];
+        $result_characters_count = mb_strlen($input_string_array[0]) + 1;
+        for ($i = 0; $result_characters_count <= $characters_count; $i += 1) {
+            $result_array[] = $input_string_array[$i];
+            $result_characters_count += mb_strlen($input_string_array[$i + 1]) + 1;
+        }
+        $output_string = implode(' ', $result_array);
+        $output_string = "<p>$output_string...</p>";
+        $output_string .= '<a class="post-text__more-link" href="#">Читать далее</a>';
+        return $output_string;
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -238,44 +259,59 @@ $data_posts = [
             </div>
         </div>
         <div class="popular__posts">
-            <?php foreach ($data_posts as $key => $data_post): ?>
-            <article class="popular__post post <?= $data_post['type']; ?>">
+            <?php foreach ($data_posts as $key => $data_post):
+                $heading = $data_post['heading'] ?? null;
+                $type = $data_post['type'] ?? null;
+                $content = $data_post['content'] ?? null;
+                $user_name = $data_post['user_name'] ?? null;
+                $avatar_src = $data_post['avatar_src'] ?? null;
+            ?>
+            <article class="popular__post post <?= $type ?>">
                 <header class="post__header">
-                    <h2><?= $data_post['heading']; ?></h2>
+                    <?php if (isset($heading)): ?>
+                    <h2><?= $heading ?></h2>
+                    <?php endif; ?>
                 </header>
                 <div class="post__main">
-                    <?php if ($data_post['type'] === 'post-quote'): ?>
+                    <?php if ($type === 'post-quote'): ?>
                     <blockquote>
-                        <p>
-                            <?= $data_post['content']; ?>
-                        </p>
+                        <?php if (isset($content)): ?>
+                        <p><?= $content ?></p>
+                        <?php endif; ?>
                         <cite>Неизвестный Автор</cite>
                     </blockquote>
                     <?php endif; ?>
-                    <?php if ($data_post['type'] === 'post-link'): ?>
+
+                    <?php if ($type === 'post-link'): ?>
                     <div class="post-link__wrapper">
-                        <a class="post-link__external" href="http://<?= $data_post['content']; ?>" title="Перейти по ссылке">
+                        <a class="post-link__external" href="<?= $content; ?>" title="Перейти по ссылке">
                             <div class="post-link__info-wrapper">
                                 <div class="post-link__icon-wrapper">
                                     <img src="https://www.google.com/s2/favicons?domain=vitadental.ru" alt="Иконка">
                                 </div>
                                 <div class="post-link__info">
-                                    <h3><?= $data_post['heading']; ?></h3>
+                                    <?php if (isset($heading)): ?>
+                                    <h3><?= $heading ?></h3>
+                                    <?php endif; ?>
                                 </div>
                             </div>
-                            <span><?= $data_post['content']; ?></span>
+                            <?php if (isset($content)): ?>
+                            <span><?= $content ?></span>
+                            <?php endif; ?>
                         </a>
                     </div>
                     <?php endif; ?>
-                    <?php if ($data_post['type'] === 'post-photo'): ?>
+
+                    <?php if ($type === 'post-photo'): ?>
                     <div class="post-photo__image-wrapper">
-                        <img src="img/<?= $data_post['content']; ?>" alt="Фото от пользователя" width="360" height="240">
+                        <img src="img/<?= $content; ?>" alt="Фото от пользователя" width="360" height="240">
                     </div>
                     <?php endif; ?>
-                    <?php if ($data_post['type'] === 'post-video'): ?>
+
+                    <?php if ($type === 'post-video'): ?>
                     <div class="post-video__block">
                         <div class="post-video__preview">
-                            <?=embed_youtube_cover(/* вставьте ссылку на видео */); ?>
+                            <?= embed_youtube_cover(/* вставьте ссылку на видео */); ?>
                             <img src="img/coast-medium.jpg" alt="Превью к видео" width="360" height="188">
                         </div>
                         <a href="post-details.html" class="post-video__play-big button">
@@ -286,18 +322,23 @@ $data_posts = [
                         </a>
                     </div>
                     <?php endif; ?>
-                    <?php if ($data_post['type'] === 'post-text'): ?>
-                    <p><?= $data_post['content']; ?></p>
+
+                    <?php if ($type === 'post-text'): ?>
+                        <?php if (isset($content)): ?>
+                        <?= cut_text($content); ?>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
                 <footer class="post__footer">
                     <div class="post__author">
                         <a class="post__author-link" href="#" title="Автор">
                             <div class="post__avatar-wrapper">
-                                <img class="post__author-avatar" src="img/<?= $data_post['avatar_src']; ?>" alt="Аватар пользователя">
+                                <img class="post__author-avatar" src="img/<?= $avatar_src; ?>" alt="Аватар пользователя">
                             </div>
                             <div class="post__info">
-                                <b class="post__author-name"><?= $data_post['user_name']; ?></b>
+                                <?php if (isset($user_name)): ?>
+                                <b class="post__author-name"><?= $user_name; ?></b>
+                                <?php endif; ?>
                                 <time class="post__time" datetime="">дата</time>
                             </div>
                         </a>
