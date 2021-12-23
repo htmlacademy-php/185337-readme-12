@@ -2,9 +2,9 @@
 function cut_text(string $input_string, int $characters_count = 300): string
 {
     if (strlen($input_string) < $characters_count) {
-        $output_string = "<p>$input_string</p>";
+        $output_string = "<p>htmlspecialchars($input_string)</p>";
     } else {
-        $input_string_array = explode(' ', $input_string);
+        $input_string_array = explode(' ', htmlspecialchars($input_string));
         $result_array = [];
         $result_characters_count = mb_strlen($input_string_array[0]) + 1;
         for ($i = 0; $result_characters_count <= $characters_count; $i += 1) {

@@ -150,7 +150,7 @@
 
                     <?php if ($type === 'post-text'): ?>
                         <?php if (isset($content)): ?>
-                            <?= cut_text(htmlspecialchars($content)); ?>
+                            <?= cut_text($content); ?>
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
