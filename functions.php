@@ -17,3 +17,43 @@ function cut_text(string $input_string, int $characters_count = 300): string
     }
     return $output_string;
 }
+
+date_default_timezone_set('Europe/Moscow');
+setlocale(LC_ALL, 'ru_RU');
+
+function format_date(string $input_date): string
+{
+    $date_now = date_create();
+    $date_diff = date_diff(date_create($input_date), $date_now);
+
+    if(date_interval_format($date_diff, '%m') >= 1) {
+        if (date_interval_format($date_diff, '%a') >= 35) {
+            $time_count = date_interval_format($date_diff, '%m');
+            $time_text = get_noun_plural_form($time_count, 'месяц', 'месяца', 'месяцев');
+            return "$time_count $time_text назад";
+        }
+    }
+    if(date_interval_format($date_diff, '%a') >= 1) {
+        $time_count = date_interval_format($date_diff, '%a');
+        if ($time_count < 7) {
+            $time_text = get_noun_plural_form($time_count, 'день', 'дня', 'дней');
+            return "$time_count $time_text назад";
+        } elseif ($time_count < 35) {
+            $time_count = ceil($time_count / 7);
+            $time_text = get_noun_plural_form($time_count, 'неделя', 'недели', 'недель');
+            return "$time_count $time_text назад";
+        }
+    }
+    if(date_interval_format($date_diff, '%h') >= 1) {
+        $time_count = date_interval_format($date_diff, '%h');
+        $time_text = get_noun_plural_form($time_count, 'час', 'часа', 'часов');
+        return "$time_count $time_text назад";
+    }
+    if(date_interval_format($date_diff, '%i') >= 1) {
+        $time_count = date_interval_format($date_diff, '%i');
+        $time_text = get_noun_plural_form($time_count, 'минута', 'минуты', 'минут');
+        return "$time_count $time_text назад";
+    }
+
+    return "менее минуты назад";
+}
