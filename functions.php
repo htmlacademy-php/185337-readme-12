@@ -1,8 +1,5 @@
 <?php
 
-date_default_timezone_set('Europe/Moscow');
-setlocale(LC_ALL, 'ru_RU');
-
 function cut_text(string $input_string, int $characters_count = 300): string
 {
     if (strlen($input_string) < $characters_count) {
@@ -25,59 +22,33 @@ function cut_text(string $input_string, int $characters_count = 300): string
 function format_date(string $input_date): string
 {
     $post_date = date_create($input_date);
-    $minute_interval = date_interval_create_from_date_string('60 minutes');
-    $hour_interval = date_interval_create_from_date_string('24 hours');
-    $day_interval = date_interval_create_from_date_string('7 days');
-    $week_interval = date_interval_create_from_date_string('35 days');
+    $time_interval = date_diff(date_create($input_date), date_create());
 
-    if (date_diff($post_date, $week_interval)) {
-        echo $post_date;
+    if ($post_date < date_create('-5 weeks')) {
+        $time_count = date_interval_format($time_interval, '%m');
+        $time_text = get_noun_plural_form($time_count, 'месяц', 'месяца', 'месяцев');
+        return "$time_count $time_text назад";
     }
-//    $date_now = new DateTime('now');
-//    $date_post = $input_date;
-//    print_r($date_now);
-//    print_r($date_post);
-//    $date_diff = date_diff(date_create($input_date), $date_now);
-//    print_r($date_diff);
-//    echo strtotime('7 days');
-//    if ($date_diff < strtotime('7 days')) {
-//        echo 'kek';
-//    }
-}
+    if ($post_date < date_create('-7 days')) {
+        $time_count = floor(date_interval_format($time_interval, '%a') / 7);
+        $time_text = get_noun_plural_form($time_count, 'неделя', 'недели', 'недель');
+        return "$time_count $time_text назад";
+    }
+    if ($post_date < date_create('-1 day')) {
+        $time_count = date_interval_format($time_interval, '%a');
+        $time_text = get_noun_plural_form($time_count, 'день', 'дня', 'дней');
+        return "$time_count $time_text назад";
+    }
+    if ($post_date < date_create('-1 hours')) {
+        $time_count = date_interval_format($time_interval, '%h');
+        $time_text = get_noun_plural_form($time_count, 'час', 'часа', 'часов');
+        return "$time_count $time_text назад";
+    }
+    if ($post_date > date_create('-60 mitunes')) {
+        $time_count = date_interval_format($time_interval, '%i');
+        $time_text = get_noun_plural_form($time_count, 'минута', 'минуты', 'минут');
+        return "$time_count $time_text назад";
+    }
 
-//function format_date(string $input_date): string
-//{
-//    $date_now = date_create();
-//    $date_diff = date_diff(date_create($input_date), $date_now);
-//
-//    if(date_interval_format($date_diff, '%m') >= 1) {
-//        if (date_interval_format($date_diff, '%a') >= 35) {
-//            $time_count = date_interval_format($date_diff, '%m');
-//            $time_text = get_noun_plural_form($time_count, 'месяц', 'месяца', 'месяцев');
-//            return "$time_count $time_text назад";
-//        }
-//    }
-//    if(date_interval_format($date_diff, '%a') >= 1) {
-//        $time_count = date_interval_format($date_diff, '%a');
-//        if ($time_count < 7) {
-//            $time_text = get_noun_plural_form($time_count, 'день', 'дня', 'дней');
-//            return "$time_count $time_text назад";
-//        } elseif ($time_count < 35) {
-//            $time_count = ceil($time_count / 7);
-//            $time_text = get_noun_plural_form($time_count, 'неделя', 'недели', 'недель');
-//            return "$time_count $time_text назад";
-//        }
-//    }
-//    if(date_interval_format($date_diff, '%h') >= 1) {
-//        $time_count = date_interval_format($date_diff, '%h');
-//        $time_text = get_noun_plural_form($time_count, 'час', 'часа', 'часов');
-//        return "$time_count $time_text назад";
-//    }
-//    if(date_interval_format($date_diff, '%i') >= 1) {
-//        $time_count = date_interval_format($date_diff, '%i');
-//        $time_text = get_noun_plural_form($time_count, 'минута', 'минуты', 'минут');
-//        return "$time_count $time_text назад";
-//    }
-//
-//    return "менее минуты назад";
-//}
+    return "менее минуты назад";
+}

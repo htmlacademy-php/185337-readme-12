@@ -92,7 +92,7 @@
             $avatar_src = $data_post['avatar_src'] ?? null;
 
             $date_post = generate_random_date($key);
-            $date_title = date('d.m.Y H:s', strtotime($date_post));
+            $date_title = date('d.m.Y H:i', strtotime($date_post));
             ?>
             <article class="popular__post post <?= $type ?>">
                 <header class="post__header">
