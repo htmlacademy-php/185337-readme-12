@@ -90,6 +90,9 @@
             $content = $data_post['content'] ?? null;
             $user_name = $data_post['user_name'] ?? null;
             $avatar_src = $data_post['avatar_src'] ?? null;
+
+            $date_post = generate_random_date($key);
+            $date_title = date('d.m.Y H:i', strtotime($date_post));
             ?>
             <article class="popular__post post <?= $type ?>">
                 <header class="post__header">
@@ -164,7 +167,7 @@
                                 <?php if (isset($user_name)): ?>
                                     <b class="post__author-name"><?= htmlspecialchars($user_name); ?></b>
                                 <?php endif; ?>
-                                <time class="post__time" datetime="">дата</time>
+                                <time class="post__time" datetime="<?= $date_post; ?>" title="<?= $date_title; ?>"><?= format_date($date_post); ?></time>
                             </div>
                         </a>
                     </div>
